@@ -34,14 +34,14 @@ const GRUNT_R       = 12;
 const CHARGER_R     = 11;
 const TANK_R        = 18;
 const BULLET_SPEED  = 520;
-const BULLET_R      = 4;
+const BULLET_R      = 6; // increased from 4 for better hit detection
 const FIRE_CD       = 0.18;
 const INV_TIME      = 1.5;
 const COMPLETE_WAIT = 2.8;
 const SPAWN_MARGIN  = 40;
 
 // ── STATE ──────────────────────────────────────────────────────────────────
-let gs = 'MENU'; // MENU | PLAYING | LEVEL_COMPLETE | GAME_OVER | WIN
+let gs = 'MENU'; // MENU | DIFFICULTY_SELECT | LIFE_SELECT | PLAYING | LEVEL_COMPLETE | GAME_OVER | WIN
 let level = 1;
 let score = 0;
 let hiScore = 0;
@@ -55,6 +55,11 @@ let spawnInterval = 1.5;
 let maxOnScreen = 6;
 let killedEnemies = 0;
 let totalEnemies = 0;
+
+// Game settings
+let difficulty = 'normal'; // easy | normal | hard
+let lifeMode = 'limited'; // limited | infinite
+let livesRemaining = 3;
 
 const keys = {};
 const mouse = { x: W/2, y: H/2 };
@@ -123,10 +128,12 @@ function burst(x, y, color, n) {
 // ── LEVELS ─────────────────────────────────────────────────────────────────
 function loadLevel(n) {
   const def = LEVEL_DEFS[n];
+  let enemyMultiplier = difficulty === 'easy' ? 0.7 : difficulty === 'hard' ? 1.3 : 1;
+
   spawnQueue = [];
-  for (let i = 0; i < def.grunts;   i++) spawnQueue.push('grunt');
-  for (let i = 0; i < def.chargers; i++) spawnQueue.push('charger');
-  for (let i = 0; i < def.tanks;    i++) spawnQueue.push('tank');
+  for (let i = 0; i < Math.ceil(def.grunts * enemyMultiplier);   i++) spawnQueue.push('grunt');
+  for (let i = 0; i < Math.ceil(def.chargers * enemyMultiplier); i++) spawnQueue.push('charger');
+  for (let i = 0; i < Math.ceil(def.tanks * enemyMultiplier);    i++) spawnQueue.push('tank');
   // shuffle
   for (let i = spawnQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i+1));
@@ -134,6 +141,9 @@ function loadLevel(n) {
   }
   maxOnScreen = def.maxOnScreen;
   spawnInterval = def.spawnInterval;
+  if (difficulty === 'hard') spawnInterval *= 0.8;
+  if (difficulty === 'easy') spawnInterval *= 1.2;
+
   spawnTimer = 0.6;
   totalEnemies = spawnQueue.length;
   killedEnemies = 0;
@@ -143,8 +153,31 @@ function loadLevel(n) {
 function startGame() {
   level = 1; score = 0;
   player = createPlayer();
+  if (lifeMode === 'limited') {
+    player.hp = livesRemaining;
+    player.maxHp = livesRemaining;
+  } else {
+    // Infinite lives
+    player.hp = 999;
+    player.maxHp = 999;
+  }
   loadLevel(1);
   gs = 'PLAYING';
+}
+
+function startDifficultySelect() {
+  gs = 'DIFFICULTY_SELECT';
+}
+
+function selectDifficulty(d) {
+  difficulty = d;
+  gs = 'LIFE_SELECT';
+}
+
+function selectLifeMode(mode, lives) {
+  lifeMode = mode;
+  livesRemaining = lives || 3;
+  startGame();
 }
 
 // ── UPDATE ─────────────────────────────────────────────────────────────────
@@ -249,10 +282,17 @@ function updateBullets(dt) {
     let hit = false;
     for (let j = enemies.length-1; j >= 0; j--) {
       const e = enemies[j];
-      if (Math.hypot(b.x-e.x, b.y-e.y) < b.r + e.r) {
-        e.hp--; e.hitTimer = 0.1; hit = true;
+      const dist = Math.hypot(b.x-e.x, b.y-e.y);
+      const collisionDist = b.r + e.r + 6; // generous collision buffer
+      if (dist < collisionDist) {
+        console.log(`HIT! Bullet hit ${e.type}, dist=${dist.toFixed(1)}, collDist=${collisionDist}`);
+        e.hp--;
+        e.hitTimer = 0.1;
+        hit = true;
         if (e.hp <= 0) {
-          score += e.score; killedEnemies++;
+          console.log(`KILL! ${e.type} destroyed, hp was ${e.hp}`);
+          score += e.score;
+          killedEnemies++;
           const col = {grunt:'#ff4444',charger:'#ff8800',tank:'#aa44ff'}[e.type];
           burst(e.x, e.y, col, e.type==='tank' ? 22 : 13);
           enemies.splice(j, 1);
@@ -503,7 +543,11 @@ function drawHUD() {
   // Enemies remaining
   const rem = spawnQueue.length + enemies.length;
   ctx.fillStyle='#ff6644'; ctx.font='15px monospace';
-  ctx.fillText('ENEMIES: '+rem, W/2, H-16);
+  ctx.fillText('敌人: '+rem, W/2, H-16);
+
+  // Gameplay tips in Chinese
+  ctx.fillStyle='#90ff00'; ctx.font='12px monospace'; ctx.textAlign='left';
+  ctx.fillText('➤ 按住鼠标连射  ➤ 躲避敌人', 10, H-40);
   ctx.restore();
 }
 
@@ -525,6 +569,10 @@ function drawMenu() {
   ctx.fillText('ARROWS / WASD  →  MOVE', W/2, H/2+22);
   ctx.fillText('MOUSE  →  AIM        CLICK / HOLD  →  SHOOT', W/2, H/2+46);
 
+  // Chinese tips
+  ctx.fillStyle='#90ff00'; ctx.font='12px monospace';
+  ctx.fillText('按住鼠标连射  |  躲避敌人  |  升级难度获得高分', W/2, H/2+68);
+
   // Play button
   const bx=W/2-95, by=H/2+76, bw=190, bh=52;
   ctx.fillStyle='#00e5ff'; ctx.fillRect(bx,by,bw,bh);
@@ -535,6 +583,67 @@ function drawMenu() {
     ctx.fillStyle='#ffee00'; ctx.font='15px monospace';
     ctx.fillText('HI-SCORE: '+hiScore, W/2, by+80);
   }
+  ctx.restore();
+  scanlines();
+}
+
+function drawDifficultySelect() {
+  drawBg();
+  ctx.save();
+  ctx.textAlign='center';
+
+  ctx.fillStyle='#ffee00'; ctx.font='bold 48px monospace';
+  ctx.fillText('选择难度', W/2, H/2-80);
+  ctx.fillStyle='#999'; ctx.font='14px monospace';
+  ctx.fillText('(SELECT DIFFICULTY)', W/2, H/2-55);
+
+  // Easy button
+  const b1x=W/2-160, b1y=H/2+10, bw=120, bh=50;
+  ctx.fillStyle='#44aa44'; ctx.fillRect(b1x,b1y,bw,bh);
+  ctx.fillStyle='#000'; ctx.font='bold 20px monospace';
+  ctx.fillText('简单', W/2-100, b1y+35);
+
+  // Normal button
+  const b2x=W/2-40, b2y=H/2+10;
+  ctx.fillStyle='#00e5ff'; ctx.fillRect(b2x,b2y,bw,bh);
+  ctx.fillStyle='#000'; ctx.font='bold 20px monospace';
+  ctx.fillText('普通', W/2, b2y+35);
+
+  // Hard button
+  const b3x=W/2+80, b3y=H/2+10;
+  ctx.fillStyle='#ff4444'; ctx.fillRect(b3x,b3y,bw,bh);
+  ctx.fillStyle='#fff'; ctx.font='bold 20px monospace';
+  ctx.fillText('困难', W/2+140, b3y+35);
+
+  ctx.restore();
+  scanlines();
+}
+
+function drawLifeSelect() {
+  drawBg();
+  ctx.save();
+  ctx.textAlign='center';
+
+  ctx.fillStyle='#ffee00'; ctx.font='bold 48px monospace';
+  ctx.fillText('选择生命模式', W/2, H/2-80);
+  ctx.fillStyle='#999'; ctx.font='14px monospace';
+  ctx.fillText('(SELECT LIFE MODE)', W/2, H/2-55);
+
+  // Infinite lives button
+  const b1x=W/2-180, b1y=H/2+10, bw=150, bh=50;
+  ctx.fillStyle='#aa44ff'; ctx.fillRect(b1x,b1y,bw,bh);
+  ctx.fillStyle='#fff'; ctx.font='bold 18px monospace';
+  ctx.fillText('无限生命', W/2-105, b1y+35);
+
+  // Limited lives buttons
+  const b2x=W/2+30, b2y=H/2+10;
+  ctx.fillStyle='#00e5ff'; ctx.fillRect(b2x,b2y,bw,bh);
+  ctx.fillStyle='#000'; ctx.font='bold 18px monospace';
+  ctx.fillText('有限生命', W/2+105, b2y+35);
+
+  ctx.fillStyle='#888'; ctx.font='13px monospace';
+  ctx.fillText('3 条生命', W/2+105, b2y+58);
+
   ctx.restore();
   scanlines();
 }
@@ -591,6 +700,8 @@ function loop(ts) {
   update(dt);
 
   if (gs === 'MENU')      { drawMenu(); }
+  else if (gs === 'DIFFICULTY_SELECT') { drawDifficultySelect(); }
+  else if (gs === 'LIFE_SELECT') { drawLifeSelect(); }
   else if (gs === 'GAME_OVER') { drawGameOver(); }
   else if (gs === 'WIN')  { drawWin(); }
   else {
@@ -652,9 +763,23 @@ canvas.addEventListener('mousedown', e => {
   if (gs === 'PLAYING') { fireBullet(); return; }
 
   const btnHit = (bx, by, bw, bh) => m.x>=bx && m.x<=bx+bw && m.y>=by && m.y<=by+bh;
-  if (gs === 'MENU'      && btnHit(W/2-95,  H/2+76,  190, 52)) startGame();
-  if (gs === 'GAME_OVER' && btnHit(W/2-105, H/2+56,  210, 52)) startGame();
-  if (gs === 'WIN'       && btnHit(W/2-115, H/2+58,  230, 52)) startGame();
+  if (gs === 'MENU'      && btnHit(W/2-95,  H/2+76,  190, 52)) startDifficultySelect();
+
+  // Difficulty buttons
+  if (gs === 'DIFFICULTY_SELECT') {
+    if (btnHit(W/2-160, H/2+10, 120, 50)) selectDifficulty('easy');
+    else if (btnHit(W/2-40, H/2+10, 120, 50)) selectDifficulty('normal');
+    else if (btnHit(W/2+80, H/2+10, 120, 50)) selectDifficulty('hard');
+  }
+
+  // Life mode buttons
+  if (gs === 'LIFE_SELECT') {
+    if (btnHit(W/2-180, H/2+10, 150, 50)) selectLifeMode('infinite', 999);
+    else if (btnHit(W/2+30, H/2+10, 150, 50)) selectLifeMode('limited', 3);
+  }
+
+  if (gs === 'GAME_OVER' && btnHit(W/2-105, H/2+56,  210, 52)) startDifficultySelect();
+  if (gs === 'WIN'       && btnHit(W/2-115, H/2+58,  230, 52)) startDifficultySelect();
 });
 
 canvas.addEventListener('mouseup',   () => { mouseHeld = false; });
@@ -663,7 +788,10 @@ canvas.addEventListener('mouseleave',() => { mouseHeld = false; });
 document.addEventListener('keydown', e => {
   keys[e.key] = true;
   if (e.key === ' ')     { e.preventDefault(); if (gs==='PLAYING') fireBullet(); }
-  if (e.key === 'Enter') { if (gs==='MENU'||gs==='GAME_OVER'||gs==='WIN') startGame(); }
+  if (e.key === 'Enter') {
+    if (gs==='MENU') startDifficultySelect();
+    if (gs==='GAME_OVER'||gs==='WIN') startDifficultySelect();
+  }
 });
 document.addEventListener('keyup', e => { keys[e.key] = false; });
 
