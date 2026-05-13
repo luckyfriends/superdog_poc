@@ -28,6 +28,7 @@ function createTimer(savedTodayCount = 0) {
 
   state.pause = function () {
     state.running = false
+    state.segmentStart = state.remaining  // anchor next tick calc at pause point
     state.startTime = null
   }
 

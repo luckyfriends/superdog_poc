@@ -95,4 +95,15 @@ describe('createTimer', () => {
     expect(t.mode).toBe(MODES.SHORT_BREAK)
     expect(t.running).toBe(true)
   })
+
+  test('resume after pause continues from correct position', () => {
+    const t = createTimer()
+    const now = Date.now()
+    t.start(now)
+    t.tick(now + 10000)         // 10s elapsed, remaining = 1490
+    t.pause()
+    t.start(now + 20000)        // resume 10s later
+    t.tick(now + 21000)         // 1 more second
+    expect(t.remaining).toBe(25 * 60 - 11)  // 1489
+  })
 })
