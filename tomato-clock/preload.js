@@ -1,6 +1,6 @@
-const { contextBridge } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('api', {
-  notify: (title, body) => {},
-  setTray: (text) => {},
+  notify: (title, body) => ipcRenderer.send('notify', { title, body }),
+  setTray: (text) => ipcRenderer.send('set-tray', text),
 })
