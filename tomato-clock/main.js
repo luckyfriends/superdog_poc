@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, Notification, ipcMain, nativeImage } = require('electron')
+const { app, BrowserWindow, Tray, Menu, Notification, ipcMain, nativeImage, powerMonitor } = require('electron')
 const path = require('path')
 
 if (!app.requestSingleInstanceLock()) {
@@ -61,6 +61,10 @@ app.on('second-instance', () => {
 app.whenReady().then(() => {
   createWindow()
   createTray()
+
+  powerMonitor.on('resume', () => {
+    if (win) win.webContents.send('system-resume')
+  })
 })
 
 app.on('activate', () => {

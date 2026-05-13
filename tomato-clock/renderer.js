@@ -142,3 +142,17 @@ els.tabs.forEach(tab => {
 })
 
 render()
+
+if (window.api && window.api.onResume) {
+  window.api.onResume(() => {
+    if (timer.running) {
+      const modeBefore = timer.mode
+      timer.tick(Date.now())
+      if (timer.mode !== modeBefore) {
+        lastMode = timer.mode
+        fireNotification()
+      }
+      render()
+    }
+  })
+}
