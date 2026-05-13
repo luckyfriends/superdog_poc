@@ -1,0 +1,40 @@
+<h2>番茄钟用什么技术平台来做？</h2>
+<p class="subtitle">选择决定了开发方式、分发方式和最终体验</p>
+
+<div class="options">
+  <div class="option" data-choice="electron" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Electron（推荐）</h3>
+      <p>用 HTML/CSS/JS 构建，打包成 .app 安装包。开发体验好，生态丰富，可跨平台。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>Web 技术栈，开发快</li><li>系统通知、托盘菜单等原生集成</li><li>打包成独立 .app</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>打包体积较大（约 100MB）</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="tauri" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Tauri</h3>
+      <p>Web 前端 + Rust 后端，体积极小。相比 Electron 更轻量，但需要安装 Rust 工具链。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>打包体积小（约 3-10MB）</li><li>性能更好，内存占用低</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>需要 Rust 环境，配置稍复杂</li></ul></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="html" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>单文件 HTML</h3>
+      <p>一个 HTML 文件，双击用浏览器打开即可运行。零依赖，最简单，但功能受限（无系统通知、无托盘图标）。</p>
+      <div class="pros-cons">
+        <div class="pros"><h4>优点</h4><ul><li>零安装，双击即用</li><li>开发极快，适合快速验证</li></ul></div>
+        <div class="cons"><h4>缺点</h4><ul><li>不是真正的"桌面应用"</li><li>无系统级通知和托盘菜单</li></ul></div>
+      </div>
+    </div>
+  </div>
+</div>

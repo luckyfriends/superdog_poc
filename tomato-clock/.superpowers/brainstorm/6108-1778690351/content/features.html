@@ -1,0 +1,54 @@
+<h2>需要哪些功能？</h2>
+<p class="subtitle">勾选你想要的功能（可多选）</p>
+
+<div class="options" data-multiselect>
+
+  <div class="option" data-choice="core" onclick="toggleSelect(this)">
+    <div class="letter">✓</div>
+    <div class="content">
+      <h3>核心计时器 <span style="color:#667eea;font-size:12px;">必选</span></h3>
+      <p>25分钟专注 + 5分钟短休息 + 15分钟长休息，循环4次</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="notification" onclick="toggleSelect(this)">
+    <div class="letter">🔔</div>
+    <div class="content">
+      <h3>系统通知</h3>
+      <p>时间到时弹出 macOS 系统通知提醒，可配合声音</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="tray" onclick="toggleSelect(this)">
+    <div class="letter">📌</div>
+    <div class="content">
+      <h3>系统托盘图标</h3>
+      <p>最小化到菜单栏，显示剩余时间，随时可控制</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="stats" onclick="toggleSelect(this)">
+    <div class="letter">📊</div>
+    <div class="content">
+      <h3>统计记录</h3>
+      <p>记录每天完成的番茄数，显示历史数据图表</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="tasks" onclick="toggleSelect(this)">
+    <div class="letter">📝</div>
+    <div class="content">
+      <h3>任务列表</h3>
+      <p>在计时旁边管理待办事项，关联番茄到具体任务</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="custom" onclick="toggleSelect(this)">
+    <div class="letter">⚙️</div>
+    <div class="content">
+      <h3>自定义时长</h3>
+      <p>可设置专注/休息时长，而不只是固定的 25/5/15 分钟</p>
+    </div>
+  </div>
+
+</div>

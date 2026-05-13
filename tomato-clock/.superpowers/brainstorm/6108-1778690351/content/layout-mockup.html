@@ -1,0 +1,57 @@
+<h2>界面布局原型</h2>
+<p class="subtitle">现代渐变风格，单窗口，紧凑设计</p>
+
+<div class="mockup">
+  <div class="mockup-header">Tomato Clock — 主窗口（约 360×480px）</div>
+  <div class="mockup-body">
+    <div style="background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px;padding:32px 24px;font-family:-apple-system,sans-serif;color:#fff;text-align:center;">
+
+      <!-- 模式切换 -->
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:28px;">
+        <div style="background:rgba(255,255,255,0.25);border-radius:20px;padding:6px 16px;font-size:12px;font-weight:600;">专注</div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:20px;padding:6px 16px;font-size:12px;color:rgba(255,255,255,0.6);">短休息</div>
+        <div style="background:rgba(255,255,255,0.1);border-radius:20px;padding:6px 16px;font-size:12px;color:rgba(255,255,255,0.6);">长休息</div>
+      </div>
+
+      <!-- 计时圆圈 -->
+      <div style="position:relative;width:200px;height:200px;margin:0 auto 28px;">
+        <svg viewBox="0 0 200 200" style="transform:rotate(-90deg)">
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="8"/>
+          <circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="8"
+            stroke-dasharray="553" stroke-dashoffset="138" stroke-linecap="round"/>
+        </svg>
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)">
+          <div style="font-size:52px;font-weight:100;letter-spacing:2px;">19:35</div>
+          <div style="font-size:12px;opacity:0.7;margin-top:4px;">FOCUS</div>
+        </div>
+      </div>
+
+      <!-- 控制按钮 -->
+      <div style="display:flex;gap:16px;justify-content:center;margin-bottom:24px;">
+        <div style="background:rgba(255,255,255,0.15);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;">⟳</div>
+        <div style="background:rgba(255,255,255,0.95);color:#764ba2;border-radius:50%;width:56px;height:56px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;">⏸</div>
+        <div style="background:rgba(255,255,255,0.15);border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:18px;">⏭</div>
+      </div>
+
+      <!-- 番茄进度 -->
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.9);"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.9);"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.35);"></div>
+        <div style="width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,0.35);"></div>
+      </div>
+      <div style="font-size:12px;opacity:0.6;">第 2 / 4 个番茄 · 今日共完成 6 个</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px;">
+  <h3>设计说明</h3>
+  <ul>
+    <li><strong>顶部</strong>：专注 / 短休息 / 长休息三个模式切换</li>
+    <li><strong>中间</strong>：圆形 SVG 进度环 + 大字倒计时</li>
+    <li><strong>下方</strong>：重置 / 暂停开始 / 跳过三个控制按钮</li>
+    <li><strong>底部</strong>：当前循环进度（小圆点）+ 今日总计</li>
+  </ul>
+</div>

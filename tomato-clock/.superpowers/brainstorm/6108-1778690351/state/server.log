@@ -1,0 +1,14 @@
+{"type":"server-started","port":61697,"host":"127.0.0.1","url_host":"localhost","url":"http://localhost:61697","screen_dir":"/Users/jun/Documents/Github/superdog_poc/tomato-clock/.superpowers/brainstorm/6108-1778690351/content","state_dir":"/Users/jun/Documents/Github/superdog_poc/tomato-clock/.superpowers/brainstorm/6108-1778690351/state"}
+{"type":"screen-added","file":"/Users/jun/Documents/Github/superdog_poc/tomato-clock/.superpowers/brainstorm/6108-1778690351/content/platform.html"}
+{"source":"user-event","type":"click","text":"A\n    \n      Electron（推荐）\n      用 HTML/CSS/JS 构建，打包成 .app 安装包。开发体验好，生态丰富，可跨平台。\n      \n        优点Web 技术栈，开发快系统通知、托盘菜单等原生集成打包成独立 .app\n        缺点打包体积较大（约 100MB）","choice":"electron","id":null,"timestamp":1778690911010}
+{"type":"screen-added","file":"/Users/jun/Documents/Github/superdog_poc/tomato-clock/.superpowers/brainstorm/6108-1778690351/content/visual-style.html"}
+{"source":"user-event","type":"click","text":"专注模式\n        25:00\n        \n          开始\n          重置\n        \n        第 1 / 4 个番茄\n      \n    \n    \n      A · 极简深色\n      深色背景，大字计时，红色强调色。专注、干净、不干扰。","choice":"minimal","id":null,"timestamp":1778691094533}
+{"source":"user-event","type":"click","text":"FOCUS\n        25:00\n        \n          \n        \n        \n          ▶ Start\n        \n      \n    \n    \n      C · 现代渐变\n      紫蓝渐变，毛玻璃元素，进度条。现代感强，有设计感。","choice":"modern","id":null,"timestamp":1778691100181}
+{"type":"screen-added","file":"/Users/jun/Documents/Github/superdog_poc/tomato-clock/.superpowers/brainstorm/6108-1778690351/content/features.html"}
+{"source":"user-event","type":"click","text":"🔔\n    \n      系统通知\n      时间到时弹出 macOS 系统通知提醒，可配合声音","choice":"notification","id":null,"timestamp":1778691204627}
+{"source":"user-event","type":"click","text":"🔔\n    \n      系统通知\n      时间到时弹出 macOS 系统通知提醒，可配合声音","choice":"notification","id":null,"timestamp":1778691205293}
+{"source":"user-event","type":"click","text":"🔔\n    \n      系统通知\n      时间到时弹出 macOS 系统通知提醒，可配合声音","choice":"notification","id":null,"timestamp":1778691209808}
+{"source":"user-event","type":"click","text":"📌\n    \n      系统托盘图标\n      最小化到菜单栏，显示剩余时间，随时可控制","choice":"tray","id":null,"timestamp":1778691213909}
+{"type":"server-stopped","reason":"idle timeout"}
+{"source":"user-event","type":"click","text":"🔔\n    \n      系统通知\n      时间到时弹出 macOS 系统通知提醒，可配合声音","choice":"notification","id":null,"timestamp":1778700953160}
+{"source":"user-event","type":"click","text":"🔔\n    \n      系统通知\n      时间到时弹出 macOS 系统通知提醒，可配合声音","choice":"notification","id":null,"timestamp":1778700953792}
