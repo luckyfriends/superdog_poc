@@ -22,6 +22,7 @@ function createTimer(savedTodayCount = 0) {
   }
 
   state.start = function (now) {
+    if (state.running) return
     state.startTime = now
     state.running = true
   }
@@ -65,9 +66,14 @@ function createTimer(savedTodayCount = 0) {
     const elapsed = Math.floor((now - state.startTime) / 1000)
     const next = state.segmentStart - elapsed
     if (next <= 0) {
+      const elapsedMs = now - state.startTime
+      const overMs = elapsedMs - state.segmentStart * 1000
       state.advance()
       state.running = true
-      state.startTime = now
+      state.startTime = now - overMs
+      // Calculate remaining with overshoot applied
+      const newElapsed = Math.floor(overMs / 1000)
+      state.remaining = state.segmentStart - newElapsed
     } else {
       state.remaining = next
     }

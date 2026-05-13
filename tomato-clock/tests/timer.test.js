@@ -106,4 +106,21 @@ describe('createTimer', () => {
     t.tick(now + 21000)         // 1 more second
     expect(t.remaining).toBe(25 * 60 - 11)  // 1489
   })
+
+  test('createTimer with savedTodayCount initializes todayCount correctly', () => {
+    const t = createTimer(5)
+    expect(t.todayCount).toBe(5)
+    expect(t.pomodoroCount).toBe(0)
+  })
+
+  test('tick carries overshoot into next segment startTime', () => {
+    const t = createTimer()
+    const now = Date.now()
+    t.start(now)
+    // Simulate tick that fires 2 seconds AFTER segment expiry
+    t.tick(now + 25 * 60 * 1000 + 2000)
+    // New segment should start 2 seconds in
+    expect(t.mode).toBe(MODES.SHORT_BREAK)
+    expect(t.remaining).toBe(5 * 60 - 2)
+  })
 })
