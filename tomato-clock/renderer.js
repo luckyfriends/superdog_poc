@@ -70,6 +70,7 @@ function render() {
 }
 
 let intervalId = null
+let lastMode = timer.mode
 
 function startTick() {
   if (intervalId) return
@@ -87,8 +88,6 @@ function stopTick() {
   clearInterval(intervalId)
   intervalId = null
 }
-
-let lastMode = timer.mode
 
 function fireNotification() {
   if (!window.api) return
