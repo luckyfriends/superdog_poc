@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+  <title>Tomato Clock</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <div class="mode-tabs">
+      <button class="tab active" data-mode="focus">专注</button>
+      <button class="tab" data-mode="short">短休息</button>
+      <button class="tab" data-mode="long">长休息</button>
+    </div>
+
+    <div class="ring-container">
+      <svg class="ring" viewBox="0 0 200 200">
+        <circle class="ring-bg" cx="100" cy="100" r="88"/>
+        <circle class="ring-progress" id="ringProgress" cx="100" cy="100" r="88"/>
+      </svg>
+      <div class="ring-text">
+        <div id="timerDisplay">25:00</div>
+        <div id="modeLabel">FOCUS</div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="btnReset" class="ctrl-btn secondary">⟳</button>
+      <button id="btnStartPause" class="ctrl-btn primary">▶</button>
+      <button id="btnSkip" class="ctrl-btn secondary">⏭</button>
+    </div>
+
+    <div class="progress-dots" id="progressDots"></div>
+    <div class="progress-label" id="progressLabel">第 1 / 4 个番茄 · 今日 0 个</div>
+  </div>
+  <script src="timer.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
