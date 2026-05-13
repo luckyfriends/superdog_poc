@@ -3,7 +3,11 @@ const { createTimer, MODES, DURATIONS } = window.TimerModule
 const CIRCUMFERENCE = 2 * Math.PI * 88 // ~553
 
 const savedToday = parseInt(localStorage.getItem('todayCount') || '0', 10)
-const timer = createTimer(savedToday)
+const savedDate = localStorage.getItem('todayDate')
+const todayDate = new Date().toDateString()
+const resolvedTodayCount = savedDate === todayDate ? savedToday : 0
+localStorage.setItem('todayDate', todayDate)
+const timer = createTimer(resolvedTodayCount)
 
 const els = {
   display: document.getElementById('timerDisplay'),
