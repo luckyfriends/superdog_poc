@@ -44,15 +44,9 @@ function createTimer(savedTodayCount = 0) {
     if (state.mode === MODES.FOCUS) {
       state.pomodoroCount += 1
       state.todayCount += 1
-      if (state.pomodoroCount % 4 === 0) {
-        state.mode = MODES.LONG_BREAK
-      } else {
-        state.mode = MODES.SHORT_BREAK
-      }
+      state.mode = state.pomodoroCount % 4 === 0 ? MODES.LONG_BREAK : MODES.SHORT_BREAK
     } else {
-      if (state.mode === MODES.LONG_BREAK) {
-        state.pomodoroCount = 0
-      }
+      if (state.mode === MODES.LONG_BREAK) state.pomodoroCount = 0
       state.mode = MODES.FOCUS
     }
     state.remaining = DURATIONS[state.mode]
@@ -71,9 +65,7 @@ function createTimer(savedTodayCount = 0) {
       state.advance()
       state.running = true
       state.startTime = now - overMs
-      // Calculate remaining with overshoot applied
-      const newElapsed = Math.floor(overMs / 1000)
-      state.remaining = state.segmentStart - newElapsed
+      state.remaining = state.segmentStart - Math.floor(overMs / 1000)
     } else {
       state.remaining = next
     }

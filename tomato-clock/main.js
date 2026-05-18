@@ -8,6 +8,11 @@ if (!app.requestSingleInstanceLock()) {
 
 let win = null
 let tray = null
+const notificationsSupported = Notification.isSupported()
+
+function showWindow() {
+  if (win) { win.show(); win.focus() }
+}
 
 function createWindow() {
   win = new BrowserWindow({
@@ -36,27 +41,23 @@ function createTray() {
   tray.setToolTip('Tomato Clock')
 
   const menu = Menu.buildFromTemplate([
-    { label: '显示窗口', click: () => { win.show(); win.focus() } },
+    { label: '显示窗口', click: showWindow },
     { type: 'separator' },
     { label: '退出', click: () => { app.exit(0) } },
   ])
   tray.setContextMenu(menu)
-  tray.on('click', () => { win.show(); win.focus() })
+  tray.on('click', showWindow)
 }
 
 ipcMain.on('notify', (_e, { title, body }) => {
-  if (Notification.isSupported()) {
-    new Notification({ title, body }).show()
-  }
+  if (notificationsSupported) new Notification({ title, body }).show()
 })
 
 ipcMain.on('set-tray', (_e, text) => {
   if (tray) tray.setTitle(text)
 })
 
-app.on('second-instance', () => {
-  if (win) { win.show(); win.focus() }
-})
+app.on('second-instance', showWindow)
 
 app.whenReady().then(() => {
   createWindow()
@@ -67,6 +68,4 @@ app.whenReady().then(() => {
   })
 })
 
-app.on('activate', () => {
-  if (win) { win.show(); win.focus() }
-})
+app.on('activate', showWindow)
